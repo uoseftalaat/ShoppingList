@@ -84,6 +84,12 @@ dependencies {
     testImplementation(libs.hilt.android.testing)
     kaptTest(libs.hilt.compiler)
 
+    // ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.extensions)
+    // LiveData
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
 
 
 }
