@@ -1,7 +1,7 @@
 [versions]
 agp = "8.5.1"
 coreTesting = "2.2.0"
-hiltAndroid = "2.46.1"
+hiltAndroid = "2.51.1"
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -17,6 +17,7 @@ constraintlayout = "2.1.4"
 retrofit = "2.11.0"
 roomRuntime = "2.6.1"
 truth = "1.4.4"
+junitJunit = "4.12"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +44,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 room-coroutines = {module = "androidx.room:room-ktx",version.ref = "roomRuntime"}
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
