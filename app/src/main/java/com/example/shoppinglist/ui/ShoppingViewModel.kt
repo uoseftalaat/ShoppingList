@@ -9,10 +9,12 @@ import com.androiddevs.shoppinglisttestingyt.other.Event
 import com.example.shoppinglist.data.local.ShoppingItem
 import com.example.shoppinglist.data.remote.responses.ImageResponse
 import com.example.shoppinglist.data.repository.ShoppingRepository
+import com.example.shoppinglist.util.Constants
 import com.example.shoppinglist.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,7 +22,7 @@ class ShoppingViewModel @Inject constructor(
     private val repo: ShoppingRepository
 ):ViewModel() {
 
-    val shoppingItem = repo.getAllItems()
+    val shoppingItems = repo.getAllItems()
 
     val totalPrice = repo.getTotalCost()
 
@@ -46,11 +48,74 @@ class ShoppingViewModel @Inject constructor(
     }
 
     fun insertShoppingItem(name:String,amount:String,price:String){
-
+        if(name.isEmpty() || amount.isEmpty() || price.isEmpty()){
+            _insertShoppingItemStatus.postValue(
+                Event(Resource.error(
+                    "one of the attributes is empty",
+                    null
+                ))
+            )
+            return
+        }
+        if(name.length > Constants.MAX_NAME_LENGTH){
+            _insertShoppingItemStatus.postValue(
+                Event(Resource.error(
+                    "the name of the item must not exceed ${Constants.MAX_NAME_LENGTH}",
+                    null
+                ))
+            )
+            return
+        }
+        if(price.length > Constants.MAX_PRICE_LENGTH){
+            _insertShoppingItemStatus.postValue(
+                Event(Resource.error(
+                    "the price of the item must not exceed ${Constants.MAX_PRICE_LENGTH}",
+                    null
+                ))
+            )
+            return
+        }
+        val numericAmount = try {
+            amount.toInt()
+        }catch (ex: Exception){
+            _insertShoppingItemStatus.postValue(
+                Event(Resource.error(
+                    "the amount is wrongly entered",
+                    null
+                ))
+            )
+            return
+        }
+        val numericPrice = try {
+            price.toFloat()
+        }catch (ex: Exception){
+            _insertShoppingItemStatus.postValue(
+                Event(Resource.error(
+                    "the price is not set properly",
+                    null
+                ))
+            )
+            return
+        }
+        val shoppingItem = ShoppingItem(name,numericAmount,numericPrice,_curImageUrl.value ?: "")
+        insertShoppingItemIntoDB(shoppingItem)
+        setCurImageUrl("")
+        _insertShoppingItemStatus.postValue(
+            Event(Resource.success(
+                shoppingItem
+            ))
+        )
     }
 
     fun searchImage(imageQuery:String){
-
+        if (imageQuery.isEmpty()){
+            return
+        }
+        _images.value = Event(Resource.loading(null))
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = repo.searchForImage(imageQuery)
+            _images.value = Event(response)
+        }
     }
 
 }

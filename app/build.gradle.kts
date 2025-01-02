@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
+    testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
@@ -64,9 +65,11 @@ dependencies {
 
     //truth library
     androidTestImplementation (libs.truth)
+    testImplementation (libs.truth)
 
     //android testing
     androidTestImplementation (libs.androidx.core.testing)
+    testImplementation (libs.androidx.core.testing)
 
     //retrofit
     implementation(libs.retrofit)
