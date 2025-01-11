@@ -7,31 +7,37 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.example.shoppinglist.getOrAwaitValue
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
+import javax.inject.Named
 
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
+@HiltAndroidTest
 class ShoppingDaoTest {
 
     @get:Rule
+    val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
-    private lateinit var shoppingDatabase:ShoppingDB
+
+    @Inject
+    @Named("testing-dp")
+    lateinit var shoppingDatabase:ShoppingDB
     private lateinit var shoppingDao: ShoppingDao
 
     @Before
     fun setup(){
-        shoppingDatabase = Room.inMemoryDatabaseBuilder(
-            ApplicationProvider.getApplicationContext(),
-            ShoppingDB::class.java
-        )
-        .allowMainThreadQueries()
-        .build()
+        hiltRule.inject()
         shoppingDao = shoppingDatabase.shoppingDao()
     }
 
